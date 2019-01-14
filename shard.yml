@@ -18,12 +18,12 @@ targets:
 dependencies:
   amber:
     github: amberframework/amber
-    version: 0.11.2
+    version: 0.11.3
     #branch: master
 
   granite:
     github: amberframework/granite
-    version: ~> 0.15.0
+    version: ~> 0.15.2
 
   quartz_mailer:
     github: amberframework/quartz-mailer
