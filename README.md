@@ -10,41 +10,60 @@ These instructions will get a copy of this project running on your machine for d
 
 Please see [deployment](https://docs.amberframework.org/amber/deployment) for notes on deploying the project in production.
 
-## Prerequisites
-
-This project requires [Crystal](https://crystal-lang.org/) ([installation guide](https://crystal-lang.org/docs/installation/)).
-
 ## Development
 
-To start your Amber server:
+Please check [Amber Docker guides](https://docs.amberframework.org/amber/guides/docker).
 
-1. Install dependencies with `shards install`
-2. Build executables with `shards build`
-3. Create and migrate your database with `bin/amber db create migrate`. Also see [creating the database](https://docs.amberframework.org/amber/guides/create-new-app#creating-the-database).
-4. Start Amber server with `bin/amber watch`
+## Cours de CI
 
-Now you can visit http://localhost:3000/ from your browser.
+### Problematiques
 
-Getting an error message you need help decoding? Check the [Amber troubleshooting guide](https://docs.amberframework.org/amber/troubleshooting), post a [tagged message on Stack Overflow](https://stackoverflow.com/questions/tagged/amber-framework), or visit [Amber on Gitter](https://gitter.im/amberframework/amber).
+Monter un environement 2 instances
+- Serveur web
+- Database
 
-Using Docker? Please check [Amber Docker guides](https://docs.amberframework.org/amber/guides/docker).
+Une seule commande `docker-compose up`
 
-## Tests
+Afficher une page avec les data (Ici Students)
 
-To run the test suite:
+### Pistes de resolutions
 
+Nous avions fait une liste des technologies repondant a la problematique et etant facile de mise en place.
+
+Java spring
+Amber crystal
+Ruby on Rails
+Phoenix Elixir
+PHP PDO
+
+Nous avons choisi Amber crystal qui etait le plus simple et le plus leger.
+
+Pour mettre en place les instances, un docker-compose.
+
+### Resolution
+
+En etant en Crystal, voici les commandes a executer
+
+```bash
+amber new ProjectCI
 ```
-crystal spec
+
+Ensuite creer le `docker-compose` avec les differentes configurations, ici:
+- app
+- migrate
+- db
+
+App est l'environement code de l'application.
+Migrate est une routine qui vas lancer les migrations base de donee.
+Db est une base de donnee PostgreSQL.
+
+*Problemes rencontrer*
+
+Il nous a fallu faire un link entre l'app et la db pour pouvoir y acceder.
+Il nous a fallu trouver la bonne URL pour se connecter a celle-ci depuis l'app.
+Il a fallu attendre que la db soit up pour lancer les migrations.
+Pour ce faire, nous executons cette commande ci-dessous
+```bash
+while ! nc -q 1 db 5432 </dev/null; do sleep 1; done
 ```
-
-## Contributing
-
-1. Fork it ( https://github.com/your-github-user/project_ci/fork )
-2. Create your feature branch ( `git checkout -b my-new-feature` )
-3. Commit your changes ( `git commit -am 'Add some feature'` )
-4. Push to the branch ( `git push origin my-new-feature` )
-5. Create a new Pull Request
-
-## Contributors
-
-- [your-github-user](https://github.com/your-github-user) Alexandre Lairan - creator, maintainer
+Pour garder une persistance des donnees, nous avons fait un partage de volume entre docker et la machine hote.

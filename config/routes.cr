@@ -28,7 +28,8 @@ Amber::Server.configure do
   end
 
   routes :web do
-    get "/", HomeController, :index
+    resources "/students", StudentsController
+    get "/", StudentsController, :index
   end
 
   routes :api do
